@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+    <persistence-unit name="pet-shelter-jpa" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.codecool.petshelter.model.Pet</class>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL94Dialect"/>
+            <property name="hibernate.hbm2dll.auto" value="update"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <!--<property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>-->
+
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/petshelterdb"/>
+            <property name="javax.persistence.jdbc.user" value="caretaker"/>
+            <property name="javax.persistence.jdbc.password" value="pet"/>
+        </properties>
+    </persistence-unit>
+</persistence>

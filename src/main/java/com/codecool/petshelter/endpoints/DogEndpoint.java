@@ -22,6 +22,7 @@ public class DogEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllDogs() {
+        System.out.println("endpoint");
         List<Pet> dogs = dao.getAllDogs();
         return Response.ok(dogs).build();
     }
@@ -29,8 +30,8 @@ public class DogEndpoint {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addDog(Pet pet) {
-        int id = dao.addDog(pet);
-        if (id < 0) return Response.status(500).entity("Could not add dog").build();
+        long id = dao.addDog(pet);
+        if (id < 0) return Response.status(500).entity("Dog already exists").build();
         return Response.ok("Dog added with id = " + id).build();
     }
 
@@ -46,7 +47,7 @@ public class DogEndpoint {
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDogById(@PathParam("id") Integer id) {
+    public Response getDogById(@PathParam("id") Long id) {
         Pet dog = dao.getDogById(id);
         if (dog == null) return Response.status(404).entity("There is no dog in database with id = " + id).build();
         return Response.ok(dog).build();
@@ -54,7 +55,7 @@ public class DogEndpoint {
 
     @DELETE
     @Path("{id}")
-    public Response deleteDogById(@PathParam("id") Integer id) {
+    public Response deleteDogById(@PathParam("id") Long id) {
         if (dao.removeDog(id)){
             return Response.ok("Deleted successfully").build();
         }

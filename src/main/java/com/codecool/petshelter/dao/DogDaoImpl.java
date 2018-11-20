@@ -1,64 +1,91 @@
 package com.codecool.petshelter.dao;
 
 import com.codecool.petshelter.model.Pet;
-import com.codecool.petshelter.model.PetType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import javax.inject.Inject;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.util.List;
 
 
 public class DogDaoImpl implements DogDao {
 
-    List<Pet> dogs = new ArrayList<>();
+    private PersistenceUtil persistenceUtil;
 
-    public DogDaoImpl() {
-        dogs.add(new Pet("Rex", 3, "German Shepard",PetType.DOG));
-        dogs.add(new Pet("Dot", 6, "Pomeranian", PetType.DOG));
+    @Inject
+    public DogDaoImpl(PersistenceUtil persistenceUtil) {
+        this.persistenceUtil = persistenceUtil;
     }
-
 
     @Override
     public List<Pet> getAllDogs() {
-        dogs.forEach(System.out::println);
-        return this.dogs;
+        System.out.println("dao");
+        EntityManager em = this.persistenceUtil.getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+
+        List<Pet> dogs = em.createQuery("FROM Pet p WHERE p.type = 'DOG'").getResultList();
+
+        transaction.commit();
+        return dogs;
     }
 
     @Override
-    public Pet getDogById(int id) {
-        Pet dog = null;
-        try {
-            dog = dogs.get(id);
-        } catch (IndexOutOfBoundsException e) {
+    public Pet getDogById(long id) {
+        EntityManager em = this.persistenceUtil.getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
 
-        }
+        Pet dog = em.find(Pet.class, id);
 
+        transaction.commit();
         return dog;
     }
 
     @Override
-    public int addDog(Pet pet) {
-        if (dogs.add(pet)) {
-            return dogs.indexOf(pet);
+    public long addDog(Pet pet) {
+        EntityManager em = this.persistenceUtil.getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+
+        try {
+            em.persist(pet);
+            transaction.commit();
+        } catch (EntityExistsException e) {
+            return -1L;
         }
-        return -1;
+        return pet.getId();
     }
 
     @Override
     public boolean updateDog(Pet pet) {
-        int index = dogs.indexOf(pet);
-        if (index < 0) return false;
-        dogs.set(index, pet);
+        EntityManager em = this.persistenceUtil.getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+
+        try {
+            em.merge(pet);
+            transaction.commit();
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
         return true;
     }
 
     @Override
-    public boolean removeDog(int id) {
-        try {
-            dogs.remove(id);
-        } catch (IndexOutOfBoundsException e) {
-            return false;
-        }
+    public boolean removeDog(long id) {
+        EntityManager em = this.persistenceUtil.getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+
+        Pet dog = em.find(Pet.class, id);
+
+        if (dog == null) return false;
+
+        em.remove(dog);
+
+        transaction.commit();
         return true;
     }
 }

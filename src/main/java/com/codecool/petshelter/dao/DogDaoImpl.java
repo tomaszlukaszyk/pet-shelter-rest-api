@@ -77,14 +77,15 @@ public class DogDaoImpl implements DogDao {
     public boolean removeDog(long id) {
         EntityManager em = this.persistenceUtil.getEntityManager();
         EntityTransaction transaction = em.getTransaction();
-        transaction.begin();
 
+        transaction.begin();
         Pet dog = em.find(Pet.class, id);
+        transaction.commit();
 
         if (dog == null) return false;
 
+        transaction.begin();
         em.remove(dog);
-
         transaction.commit();
         return true;
     }

@@ -22,7 +22,6 @@ public class DogEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllDogs() {
-        System.out.println("endpoint");
         List<Pet> dogs = dao.getAllDogs();
         return Response.ok(dogs).build();
     }

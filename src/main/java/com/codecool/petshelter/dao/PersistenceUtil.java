@@ -10,7 +10,6 @@ public class PersistenceUtil {
     private EntityManager entityManager;
 
     public PersistenceUtil() {
-        System.out.println("util");
         entityManagerFactory = Persistence.createEntityManagerFactory("pet-shelter-jpa");
         entityManager = entityManagerFactory.createEntityManager();
     }

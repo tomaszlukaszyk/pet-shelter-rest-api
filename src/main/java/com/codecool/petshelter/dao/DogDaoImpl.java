@@ -20,7 +20,6 @@ public class DogDaoImpl implements DogDao {
 
     @Override
     public List<Pet> getAllDogs() {
-        System.out.println("dao");
         EntityManager em = this.persistenceUtil.getEntityManager();
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();

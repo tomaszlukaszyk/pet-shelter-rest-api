@@ -60,32 +60,34 @@ public class DogDaoImpl implements DogDao {
 
     @Override
     public boolean updateDog(Pet pet) {
+
+        Pet dogInDb = getDogById(pet.getId());
+
+        if (dogInDb == null) return false;
+
         EntityManager em = this.persistenceUtil.getEntityManager();
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
 
-        try {
-            em.merge(pet);
-            transaction.commit();
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+        em.merge(pet);
+
+        transaction.commit();
         return true;
     }
 
     @Override
     public boolean removeDog(long id) {
-        EntityManager em = this.persistenceUtil.getEntityManager();
-        EntityTransaction transaction = em.getTransaction();
 
-        transaction.begin();
-        Pet dog = em.find(Pet.class, id);
-        transaction.commit();
+        Pet dog = getDogById(id);
 
         if (dog == null) return false;
 
+        EntityManager em = this.persistenceUtil.getEntityManager();
+        EntityTransaction transaction = em.getTransaction();
         transaction.begin();
+
         em.remove(dog);
+
         transaction.commit();
         return true;
     }

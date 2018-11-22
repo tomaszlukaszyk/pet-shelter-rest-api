@@ -1,5 +1,7 @@
 package com.codecool.petshelter.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -23,6 +25,7 @@ public class Pet {
     private PetType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Caretaker caretaker;
 
     public Pet() {

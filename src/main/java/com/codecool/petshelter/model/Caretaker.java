@@ -1,5 +1,7 @@
 package com.codecool.petshelter.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ public class Caretaker {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "caretaker")
+    @JsonManagedReference
     private List<Pet> pets = new ArrayList<>();
 
     public Caretaker() {

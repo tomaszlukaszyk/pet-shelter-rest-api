@@ -31,10 +31,10 @@ public class DogEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addDog(Pet pet) {
 
-        if (pet.getType() != PetType.DOG) return Response.status(500).entity("That is not a dog").build();
+        if (pet.getType() != PetType.DOG) return Response.status(400).entity("That is not a dog").build();
 
         long id = dao.addPet(pet);
-        if (id < 0) return Response.status(500).entity("Dog already exists").build();
+        if (id < 0) return Response.status(400).entity("Dog already exists").build();
         return Response.ok("Dog added with id = " + id).build();
     }
 
@@ -62,6 +62,6 @@ public class DogEndpoint {
         if (dao.removePet(id, PetType.DOG)){
             return Response.ok("Deleted successfully").build();
         }
-        return Response.status(500).entity("Could not delete dog").build();
+        return Response.status(400).entity("Could not delete dog").build();
     }
 }

@@ -25,11 +25,11 @@ public class Pet {
     private PetType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonBackReference(value = "pet-caretaker")
     private Caretaker caretaker;
 
     @OneToOne(mappedBy = "adoptedPet")
-    @JsonBackReference
+    @JsonBackReference(value = "pet-adoption")
     private Adoption adoption;
 
     public Pet() {

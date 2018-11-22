@@ -20,7 +20,7 @@ public class Caretaker {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "caretaker")
-    @JsonManagedReference
+    @JsonManagedReference(value = "pet-caretaker")
     private List<Pet> pets = new ArrayList<>();
 
     public Caretaker() {

@@ -21,7 +21,7 @@ public class Adoption {
     private String adopterPhoneNumber;
 
     @OneToOne
-    @JsonManagedReference
+    @JsonManagedReference(value = "pet-adoption")
     private Pet adoptedPet;
 
     public Adoption() {

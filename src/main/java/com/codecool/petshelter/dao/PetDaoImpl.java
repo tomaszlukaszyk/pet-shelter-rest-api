@@ -1,6 +1,7 @@
 package com.codecool.petshelter.dao;
 
 import com.codecool.petshelter.model.Pet;
+import com.codecool.petshelter.model.PetType;
 
 import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
@@ -9,58 +10,63 @@ import javax.persistence.EntityTransaction;
 import java.util.List;
 
 
-public class DogDaoImpl implements DogDao {
+public class PetDaoImpl implements PetDao {
 
     private PersistenceUtil persistenceUtil;
 
     @Inject
-    public DogDaoImpl(PersistenceUtil persistenceUtil) {
+    public PetDaoImpl(PersistenceUtil persistenceUtil) {
         this.persistenceUtil = persistenceUtil;
     }
 
     @Override
-    public List<Pet> getAllDogs() {
+    public List<Pet> getAllPetsByType(PetType type) {
         EntityManager em = this.persistenceUtil.getEntityManager();
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
 
-        List<Pet> dogs = em.createQuery("FROM Pet p WHERE p.type = 'DOG'").getResultList();
+        List<Pet> dogs = em.createQuery("FROM Pet p WHERE p.type = :type").setParameter("type", type).getResultList();
 
         transaction.commit();
         return dogs;
     }
 
     @Override
-    public Pet getDogById(long id) {
+    public Pet getPetById(long id, PetType type) {
         EntityManager em = this.persistenceUtil.getEntityManager();
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
 
-        Pet dog = em.find(Pet.class, id);
+        Pet pet = em.find(Pet.class, id);
 
         transaction.commit();
-        return dog;
+
+        if (pet != null && pet.getType() == type) return null;
+
+        return pet;
     }
 
     @Override
-    public long addDog(Pet pet) {
+    public long addPet(Pet pet) {
         EntityManager em = this.persistenceUtil.getEntityManager();
         EntityTransaction transaction = em.getTransaction();
+        long petId = -1L;
         transaction.begin();
 
         try {
             em.persist(pet);
-            transaction.commit();
+            petId = pet.getId();
         } catch (EntityExistsException e) {
-            return -1L;
         }
-        return pet.getId();
+
+        transaction.commit();
+        return petId;
     }
 
     @Override
-    public boolean updateDog(Pet pet) {
+    public boolean updatePet(Pet pet) {
 
-        Pet dogInDb = getDogById(pet.getId());
+        Pet dogInDb = getPetById(pet.getId(), PetType.DOG);
 
         if (dogInDb == null) return false;
 
@@ -75,9 +81,9 @@ public class DogDaoImpl implements DogDao {
     }
 
     @Override
-    public boolean removeDog(long id) {
+    public boolean removePet(long id, PetType type) {
 
-        Pet dog = getDogById(id);
+        Pet dog = getPetById(id, PetType.DOG);
 
         if (dog == null) return false;
 

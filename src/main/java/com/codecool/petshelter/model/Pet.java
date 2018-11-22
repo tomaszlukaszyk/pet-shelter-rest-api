@@ -21,9 +21,6 @@ public class Pet {
     @Enumerated(EnumType.STRING)
     private PetType type;
 
-    @Column(nullable = false)
-    private boolean adopted = false;
-
     public Pet() {
     }
 
@@ -74,20 +71,11 @@ public class Pet {
         this.type = type;
     }
 
-    public boolean isAdopted() {
-        return adopted;
-    }
-
-    public void setAdopted(boolean adopted) {
-        this.adopted = adopted;
-    }
-
     @Override
     public String toString() {
         return "Pet name: " + name
                 + "\nAge: " + age
                 + "\nBreed: " + breed
-                +"\nType: " + type
-                +"\nAdopted: " + adopted;
+                +"\nType: " + type;
     }
 }

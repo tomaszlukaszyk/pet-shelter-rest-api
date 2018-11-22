@@ -25,7 +25,8 @@ public class PetDaoImpl implements PetDao {
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
 
-        List<Pet> dogs = em.createQuery("FROM Pet p WHERE p.type = :type").setParameter("type", type).getResultList();
+        List<Pet> dogs = em.createQuery("FROM Pet p FULL JOIN p.adoption a WHERE a.id = null AND p.type = :type ORDER BY p.id")
+                .setParameter("type", type).getResultList();
 
         transaction.commit();
         return dogs;

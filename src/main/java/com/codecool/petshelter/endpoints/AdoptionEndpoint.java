@@ -72,8 +72,6 @@ public class AdoptionEndpoint {
         Adoption adoption = dao.getAdoptionById(adoptionId);
         if (adoption == null) return Response.status(404).entity("There is no adoption in database with id = " + adoptionId).build();
 
-        System.out.println(petType.toUpperCase());
-        System.out.println(PetType.valueOf(petType.toUpperCase()) == PetType.DOG);
         Pet pet = petDao.getPetById(petId, PetType.valueOf(petType.toUpperCase()));
         if (pet == null) return Response.status(404).entity("There is no " + petType + " in database with id = " + petId).build();
 

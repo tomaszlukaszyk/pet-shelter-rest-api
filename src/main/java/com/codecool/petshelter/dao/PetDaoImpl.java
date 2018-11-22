@@ -42,7 +42,7 @@ public class PetDaoImpl implements PetDao {
 
         transaction.commit();
 
-        if (pet != null && pet.getType() == type) return null;
+        if (pet != null && pet.getType() != type) return null;
 
         return pet;
     }

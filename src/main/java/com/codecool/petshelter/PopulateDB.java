@@ -1,5 +1,6 @@
 package com.codecool.petshelter;
 
+import com.codecool.petshelter.model.Adoption;
 import com.codecool.petshelter.model.Caretaker;
 import com.codecool.petshelter.model.Pet;
 import com.codecool.petshelter.model.PetType;
@@ -44,6 +45,9 @@ public class PopulateDB {
             }
         }
 
+        Adoption adoption1 = new Adoption("Jason Bateman", "311 Long St. LA", "443-445-110");
+        adoption1.setAdoptedPet(pets.get(1));
+
 
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("pet-shelter-jpa");
         EntityManager em = entityManagerFactory.createEntityManager();
@@ -55,6 +59,7 @@ public class PopulateDB {
         for (Pet pet: pets) {
             em.persist(pet);
         }
+        em.persist(adoption1);
         transaction.commit();
         em.close();
         entityManagerFactory.close();

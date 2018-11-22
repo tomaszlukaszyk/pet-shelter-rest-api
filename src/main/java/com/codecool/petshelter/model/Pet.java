@@ -28,6 +28,10 @@ public class Pet {
     @JsonBackReference
     private Caretaker caretaker;
 
+    @OneToOne(mappedBy = "adoptedPet")
+    @JsonBackReference
+    private Adoption adoption;
+
     public Pet() {
     }
 
@@ -84,6 +88,16 @@ public class Pet {
 
     public void setCaretaker(Caretaker caretaker) {
         this.caretaker = caretaker;
+        this.adoption = null;
+    }
+
+    public Adoption getAdoption() {
+        return adoption;
+    }
+
+    public void setAdoption(Adoption adoption) {
+        this.adoption = adoption;
+        this.caretaker.removePet(this);
     }
 
     @Override

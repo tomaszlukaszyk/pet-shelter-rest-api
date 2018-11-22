@@ -1,7 +1,10 @@
 package com.codecool.petshelter.endpoints;
 
 import com.codecool.petshelter.dao.CaretakerDao;
+import com.codecool.petshelter.dao.PetDao;
 import com.codecool.petshelter.model.Caretaker;
+import com.codecool.petshelter.model.Pet;
+import com.codecool.petshelter.model.PetType;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -13,10 +16,12 @@ import java.util.List;
 public class CaretakerEndpoint {
 
     private CaretakerDao dao;
+    private PetDao petDao;
 
     @Inject
-    public CaretakerEndpoint(CaretakerDao dao) {
+    public CaretakerEndpoint(CaretakerDao dao, PetDao petDao) {
         this.dao = dao;
+        this.petDao = petDao;
     }
 
     @GET
@@ -59,5 +64,19 @@ public class CaretakerEndpoint {
             return Response.ok("Deleted successfully").build();
         }
         return Response.status(400).entity("Could not delete caretaker").build();
+    }
+
+    @PUT
+    @Path("{caretakerId}/{petType}/{petId}")
+    public Response addPetToCaretaker(@PathParam("caretakerId") long caretakerId, @PathParam("petType") String petType, @PathParam("petId") long petId) {
+        Caretaker caretaker = dao.getCaretakerById(caretakerId);
+        if (caretaker == null) return Response.status(404).entity("There is no caretaker in database with id = " + caretakerId).build();
+
+        Pet pet = petDao.getPetById(petId, PetType.valueOf(petType.toUpperCase()));
+        if (pet == null) return Response.status(404).entity("There is no " + petType + " in database with id = " + petId).build();
+
+        caretaker.addPet(pet);
+        dao.updateCaretaker(caretaker);
+        return Response.ok("Pet added to caretaker").build();
     }
 }

@@ -1,6 +1,7 @@
 package com.codecool.petshelter.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Pet {
@@ -20,6 +21,9 @@ public class Pet {
 
     @Enumerated(EnumType.STRING)
     private PetType type;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Caretaker caretaker;
 
     public Pet() {
     }
@@ -71,11 +75,24 @@ public class Pet {
         this.type = type;
     }
 
+    public Caretaker getCaretaker() {
+        return caretaker;
+    }
+
+    public void setCaretaker(Caretaker caretaker) {
+        this.caretaker = caretaker;
+    }
+
     @Override
-    public String toString() {
-        return "Pet name: " + name
-                + "\nAge: " + age
-                + "\nBreed: " + breed
-                +"\nType: " + type;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pet pet = (Pet) o;
+        return id == pet.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

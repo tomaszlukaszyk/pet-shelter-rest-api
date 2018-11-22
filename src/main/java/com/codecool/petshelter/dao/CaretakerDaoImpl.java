@@ -23,7 +23,7 @@ public class CaretakerDaoImpl implements CaretakerDao {
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
 
-        List<Caretaker> caretakers = em.createQuery("From caretaker").getResultList();
+        List<Caretaker> caretakers = em.createQuery("From Caretaker").getResultList();
 
         transaction.commit();
         return caretakers;
